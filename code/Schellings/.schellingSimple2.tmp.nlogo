@@ -8,27 +8,26 @@ to setup
   ;;It also resets the ticks counter.
   clear-all  ;; I always forget this
   ask patches[
-    ifelse random 100 < density [   ;; from slider
+    set pcolor white
+    if random 100 < density [   ;; from slider
       ifelse random 2 = 1[
         set pcolor red
       ][
         set pcolor blue
       ]
-    ][
-      set pcolor white
     ]
   ]
   reset-ticks ;; I always forget this
 end
 
 to go
-  ;;the go procedure is called repeatedly and updates the patches’ colors based on their happiness.
+  ;;the go procedure is called repeatedly and updates the patches’ colors based on the happiness of their neighbors.
   ;;It also advances the ticks counter.
   ask patches[
-    let col  pcolor
-    let like  count neighbors with [ pcolor = col ]
+
+    let like  count neighbors with [ pcolor = [ pcolor] of myself ]
     if like < happy [  ;; from slider
-      ask one-of patches with [ pcolor = white][ set pcolor col ]
+      ask one-of patches with [ pcolor = white][ set pcolor [ pcolor] of myself ]
       set pcolor white
     ]
   ]

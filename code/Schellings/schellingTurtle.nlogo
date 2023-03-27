@@ -4,32 +4,31 @@
 ;;The code has two procedures: setup and go.
 
 to setup
-  ;;The setup procedure initializes the patches with colors based on a density parameter.
+  ;;The setup procedure initializes the patches with a turtle with colors blue or red to a nuber based on a density parameter.
   ;;It also resets the ticks counter.
+  set-default-shape turtles "circle"
   clear-all  ;; I always forget this
   ask patches[
-    ifelse random 100 < density [   ;; from slider
-      ifelse random 2 = 1[
-        set pcolor red
-      ][
-        set pcolor blue
+    set pcolor white
+    if random 100 < density [   ;; from slider
+      sprout 1[
+          ifelse random 2 = 1[
+          set color red
+        ][
+          set color blue
+        ]
       ]
-    ][
-      set pcolor white
     ]
   ]
   reset-ticks ;; I always forget this
 end
 
 to go
-  ;;the go procedure is called repeatedly and updates the patches’ colors based on their happiness.
+  ;;the go procedure is called repeatedly and updates the patches the turtles occupy  based on the happiness and the number of their neighbors that are the same color.
   ;;It also advances the ticks counter.
-  ask patches[
-    let col  pcolor
-    let like  count neighbors with [ pcolor = col ]
-    if like < happy [  ;; from slider
-      ask one-of patches with [ pcolor = white][ set pcolor col ]
-      set pcolor white
+  ask turtles[
+    if ( count (turtles-on neighbors)  with [ color = [ color ] of myself ] ) < happy [  ;; from slider
+      move-to one-of patches with [ not (any? other turtles-here)]
     ]
   ]
   tick   ;; I always forget this
